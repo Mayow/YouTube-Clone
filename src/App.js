@@ -42,8 +42,17 @@ export default () => {
     videos.forEach(function(item, index) {
       if (item.id.kind === "youtube#channel") {
         videos.splice(index, 1);
-        console.log(videos.splice(index, 1));
       }
+
+      //decodes the title due to the &#39 special
+      //chararcters that are received from the API call
+      var parser = new DOMParser();
+      var dom = parser.parseFromString(
+        "<!doctype html><body>" + item.snippet.title,
+        "text/html"
+      );
+      var decodedString = dom.body.textContent;
+      item.snippet.title = decodedString;
     });
     setVideos(videos);
     setSelectedVideo(videos[0]);
